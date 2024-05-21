@@ -18,16 +18,14 @@ class AI:
         self.input_name = self.sess.get_inputs()[0].name
 
     def preprocess(self, img: np.ndarray) -> np.ndarray:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = np.transpose(img, (2, 0, 1))
         img = img.astype(np.float32) / 255
 
         return np.array([img], dtype=np.float32)
 
     def postprocess(self, detections: np.ndarray) -> np.ndarray:
-        print(detections)
-        raise NotImplementedError
-
-        return detections
+        return detections[0]
 
     def predict(self, img: np.ndarray) -> np.ndarray:
         inputs = self.preprocess(img)
