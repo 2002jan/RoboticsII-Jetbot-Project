@@ -18,13 +18,13 @@ class AI:
         self.input_name = self.sess.get_inputs()[0].name
 
     def preprocess(self, img: np.ndarray) -> np.ndarray:
-        ##TODO: preprocess your input image, remember that img is in BGR channels order
-        raise NotImplementedError
+        img = np.transpose(img, (2, 0, 1))
+        img = img.astype(np.float32) / 255
 
-        return img
+        return np.array([img], dtype=np.float32)
 
     def postprocess(self, detections: np.ndarray) -> np.ndarray:
-        ##TODO: prepare your outputs
+        print(detections)
         raise NotImplementedError
 
         return detections
