@@ -22,6 +22,11 @@ class AI:
         img = np.transpose(img, (2, 0, 1))
         img = img.astype(np.float32) / 255
 
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+
+        img = (img - mean) / std
+
         return np.array([img], dtype=np.float32)
 
     def postprocess(self, detections: np.ndarray) -> np.ndarray:
