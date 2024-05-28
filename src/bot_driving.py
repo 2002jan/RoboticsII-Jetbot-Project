@@ -71,10 +71,18 @@ def main():
 
     input('Robot is ready to ride. Press Enter to start...')
 
+    forward_predictions = [0.0]
+    left_predictions = [0.0]
+
+
+    pred_length = 10
+
+    weights = [np.exp(i) for i in range(pred_length)]
+
     forward, left = 0.0, 0.0
     while True:
         print(f'Forward: {forward:.4f}\tLeft: {left:.4f}')
-        driver.update(forward, left)
+        driver.update(np.average(forward_predictions, weights=weights[0:len(forward_predictions)]), np.average(left_predictions, weights=weights[0:len(forward_predictions)]))
 
         ret, image = video_capture.read()
         if not ret:
@@ -82,6 +90,14 @@ def main():
             break
         forward, left = ai.predict(image)
 
+        forward_predictions.append(forward)
+        left_predictions.append(left)
+
+        if len(forward_predictions) > pred_length:
+            forward_predictions.pop(0)
+            left_predictions.pop(0)
+
 
 if __name__ == '__main__':
     main()
+
