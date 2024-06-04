@@ -18,7 +18,7 @@ class AI:
         self.output_name = self.sess.get_outputs()[0].name
         self.input_name = self.sess.get_inputs()[0].name
         # averaging
-        self.queue_length = 10
+        self.queue_length = 10  
         self.last_frames = [(0.0, 0.0) for _ in range(self.queue_length)]
 
     def preprocess(self, img: np.ndarray) -> np.ndarray:
@@ -33,6 +33,7 @@ class AI:
     def postprocess(self, detections: np.ndarray) -> np.ndarray:
         # make sure the output is between -1 and 1
         detections = np.clip(detections, -1.0, 1.0)
+        detections = detections.reshape(2,)
         return detections
 
     def predict(self, img: np.ndarray) -> np.ndarray:
@@ -46,14 +47,12 @@ class AI:
 
         assert outputs.dtype == np.float32
         assert outputs.shape == (2,)
-        # Implement some start driving weightings.
-        # First: exponential average of the last 10 frames
         self.update_queue(outputs)
-        averaged_outputs = self.exponential_average(alpha=1.2) # Could be a parameter in config, TODO
+        averaged_outputs = self.exponential_average(alpha=1.1)
 
 
-        assert outputs.max() < 1.0
-        assert outputs.min() > -1.0
+        assert outputs.max() <= 1.0
+        assert outputs.min() >= -1.0
 
         return averaged_outputs
     
